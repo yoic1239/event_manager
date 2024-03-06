@@ -6,6 +6,15 @@ def clean_zipcode(zipcode)
   zipcode.to_s.rjust(5, '0')[0..4]
 end
 
+# Assignment: Clean phone numbers 
+def clean_phone_numbers(phone_num)
+  cleaned_num = phone_num.gsub(/\D/, '')
+
+  cleaned_num = cleaned_num[1..] if cleaned_num.length == 11 && cleaned_num[0] == '1'
+
+  cleaned_num.length == 10 ? cleaned_num : ''
+end
+
 def legislators_by_zipcode(zip)
   civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
   civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
@@ -46,9 +55,14 @@ contents.each do |row|
   id = row[0]
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
+  phone_num = clean_phone_numbers(row[:homephone])
+
   legislators = legislators_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding)
 
   save_thank_you_letter(id, form_letter)
+
+  # Assignment: Clean phone numbers
+  puts "#{name} can sign up for mobile alerts for his number #{phone_num}" if phone_num != ''
 end
