@@ -2,6 +2,7 @@ require 'csv'
 require 'google/apis/civicinfo_v2'
 require 'erb'
 require 'time'
+require 'date'
 
 def clean_zipcode(zipcode)
   zipcode.to_s.rjust(5, '0')[0..4]
@@ -47,8 +48,18 @@ def fetch_reg_hour(time)
 end
 
 def peak_hour(hour_arr)
-  hour_arr.tally.select { |hour, count| count == hour_arr.tally.values.max }.keys.map { |hr| "#{hr}:00" }
+  hour_arr.tally.select { |_, count| count == hour_arr.tally.values.max }.keys.map { |hr| "#{hr}:00" }
 end
+
+# Assignment: Day of the week targeting
+def fetch_weekday(date)
+  Date::DAYNAMES[Date.strptime(date, '%D %R').wday]
+end
+
+def peak_weekday(weekday_arr)
+  weekday_arr.tally.select { |_, count| count == weekday_arr.tally.values.max }.keys
+end
+
 
 puts 'EventManager initialized.'
 
@@ -63,6 +74,9 @@ erb_template = ERB.new template_letter
 
 # Assignment: Time targeting
 reg_hour = []
+
+# Assignment: Day of the week targeting
+reg_weekday = []
 
 contents.each do |row|
   # id = row[0]
@@ -81,7 +95,13 @@ contents.each do |row|
 
   # Assignment: Time targeting
   reg_hour.push(fetch_reg_hour(row[:regdate]))
+
+  # Assignment: Day of the week targeting
+  reg_weekday.push(fetch_weekday(row[:regdate]))
 end
 
 # Assignment: Time targeting
 puts "The peak registration hours are #{peak_hour(reg_hour).join(', ')}."
+
+# Assignment: Day of the week targeting
+puts "Most people register on #{peak_weekday(reg_weekday).join(', ')}."
