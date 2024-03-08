@@ -79,19 +79,19 @@ reg_hour = []
 reg_weekday = []
 
 contents.each do |row|
-  # id = row[0]
-  # name = row[:first_name]
-  # zipcode = clean_zipcode(row[:zipcode])
-  # phone_num = clean_phone_numbers(row[:homephone])
+  id = row[0]
+  name = row[:first_name]
+  zipcode = clean_zipcode(row[:zipcode])
+  phone_num = clean_phone_numbers(row[:homephone])
 
-  # legislators = legislators_by_zipcode(zipcode)
+  legislators = legislators_by_zipcode(zipcode)
 
-  # form_letter = erb_template.result(binding)
+  form_letter = erb_template.result(binding)
 
-  # save_thank_you_letter(id, form_letter)
+  save_thank_you_letter(id, form_letter)
 
-  # # Assignment: Clean phone numbers
-  # puts "#{name} can sign up for mobile alerts for his number #{phone_num}" if phone_num != ''
+  # Assignment: Clean phone numbers
+  puts "#{name} can sign up for mobile alerts for his number #{phone_num}" if phone_num != ''
 
   # Assignment: Time targeting
   reg_hour.push(fetch_reg_hour(row[:regdate]))
